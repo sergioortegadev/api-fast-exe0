@@ -1,13 +1,9 @@
-import mysql from "mysql2/promise.js";
+import { createClient } from "@libsql/client";
+import dotenv from "dotenv/config";
 
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "0330",
-  database: "pruebadb",
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+const db = createClient({
+  url: process.env.DB,
+  authToken: process.env.TOKEN,
 });
 
-export default pool;
+export default db;
