@@ -1,0 +1,22 @@
+info:
+  name: Crear venta
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3010/ventas
+  body:
+    type: json
+    data: |-
+      {
+        "producto": "Set 40 autitos ",
+        "monto" : "19000"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

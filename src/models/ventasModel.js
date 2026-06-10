@@ -5,6 +5,10 @@ export const ventasModel = {
     const result = await db.execute("SELECT * FROM ventas");
     return result.rows;
   },
+  getOne: async (id) => {
+    const result = await db.execute(`SELECT * FROM ventas WHERE id = ${id}`);
+    return result.rows;
+  },
   createVentas: async (producto, monto) => {
     return await db.execute({
       sql: "INSERT INTO ventas (producto, monto) VALUES (?, ?)",

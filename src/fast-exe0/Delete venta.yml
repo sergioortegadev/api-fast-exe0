@@ -1,0 +1,17 @@
+info:
+  name: Delete venta
+  type: http
+  seq: 6
+
+http:
+  method: DELETE
+  url: http://localhost:3010/ventas/9
+  body:
+    type: json
+    data: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

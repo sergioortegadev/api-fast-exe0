@@ -1,0 +1,162 @@
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reporte Mensual</title>
+    <style>
+      /* Configuración de página A4 */
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact; /* Fuerza a los motores de PDF a renderizar los colores de fondo */
+        display: flex;
+        flex-direction: column;
+        min-height: 297mm; /* Altura estándar de A4 */
+        box-sizing: border-box;
+      }
+
+      /* Contenedor Principal para asegurar la estructura */
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding-bottom: 60px; /* Espacio para que el contenido no pise el footer */
+      }
+
+      /* Encabezado */
+      .header-container {
+        background-color: #2b37fb;
+        border-bottom: 4px solid #035e13;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+      }
+      .logo {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+      }
+      .title {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Contenido */
+      .content {
+        padding: 30px;
+        flex-grow: 1;
+      }
+      .subtitle {
+        color: #333333;
+        font-size: 18px;
+        margin-bottom: 25px;
+        font-weight: 600;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+      }
+
+      /* Tabla de Datos de la DB */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      .data-table th {
+        background-color: #f4f4f4;
+        color: #333333;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        padding: 12px;
+        border-bottom: 2px solid #ddd;
+        text-align: left;
+      }
+      .data-table td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        color: #555555;
+        font-size: 14px;
+      }
+      .data-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      /* Footer Fijo en la parte inferior */
+      .footer {
+        background-color: #3f3f3f;
+        color: #d8ef73;
+        text-align: center;
+        padding: 15px 20px;
+        font-size: 13px;
+        margin-top: auto; /* Empuja el footer al final de la página A4 */
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+      .footer a {
+        color: #d8ef73;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="wrapper">
+      <header class="header-container">
+        <img class="logo" src="{{logo}}" alt="Logo" />
+        <h1 class="title">Reporte Mensual</h1>
+      </header>
+
+      <main class="content">
+        {{! Subtítulo dinámico }}
+        {{#if subTitle}}
+          <h2 class="subtitle">{{subTitle}}</h2>
+        {{/if}}
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Producto</th>
+              <th>Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{! Iteración del array de objetos proveniente de la DB }}
+            {{#each items}}
+              <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.producto}}</td>
+                <td>$ {{this.monto}}</td>
+              </tr>
+            {{else}}
+              <tr>
+                <td colspan="3" style="text-align: center; color: #999;">No hay registros disponibles</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <p><strong>Centro Médico de Salud Integrada</strong></p>
+      <p>Teléfonos: +54 (351) 555-0199 / +54 (351) 555-0122</p>
+      <p>Email: <a href="mailto:contacto@instituciondesalud.com">contacto@instituciondesalud.com</a></p>
+    </footer>
+
+  </body>
+</html>
