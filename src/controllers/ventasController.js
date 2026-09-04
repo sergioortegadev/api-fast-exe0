@@ -10,7 +10,7 @@ import puppeteer from "puppeteer";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const getVentas = async (req, res) => {
+export const getVentasPdf = async (req, res) => {
   try {
     // traemos data de la DB
     const ventas = await ventasModel.getAll();
@@ -72,12 +72,17 @@ export const getVentas = async (req, res) => {
     console.error("   >> Error al generar el PDF en el controlador:\n", error);
     return res.status(500).json({ message: "Error interno al generar el reporte" });
   }
+};
 
-  // res.status(200).json({
-  //   message: "Request todas las ventas",
-  //   data: ventas,
-  // });
-  // console.log(" Request todas las ventas ok");
+export const getVentas = async (req, res) => {
+  const venta = await ventasModel.getAll();
+
+  console.table(venta);
+
+  return res.status(200).json({
+    message: "Request de la venta",
+    data: venta,
+  });
 };
 
 export const getUnaVenta = async (req, res) => {

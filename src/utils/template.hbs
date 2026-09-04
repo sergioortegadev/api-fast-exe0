@@ -1,162 +1,236 @@
 <html lang="es">
+
   <head>
     <meta charset="UTF-8" />
     <title>Reporte Mensual</title>
     <style>
-      /* Configuración de página A4 */
+      /* 1. Reset completo de la página A4 */
       @page {
         size: A4;
-        margin: 0;
+        margin: 0; /* Dejar en 0 elimina los espacios en blanco fantasmas */
       }
+
       body {
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         margin: 0;
         padding: 0;
-        -webkit-print-color-adjust: exact; /* Fuerza a los motores de PDF a renderizar los colores de fondo */
-        display: flex;
-        flex-direction: column;
-        min-height: 297mm; /* Altura estándar de A4 */
-        box-sizing: border-box;
+        -webkit-print-color-adjust: exact;
+        background-color: #ffffff;
       }
 
-      /* Contenedor Principal para asegurar la estructura */
-      .wrapper {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding-bottom: 60px; /* Espacio para que el contenido no pise el footer */
+      /* 2. El truco del layout: Una tabla contenedora invisible que maneja las páginas */
+      .layout-table {
+        width: 100%;
+        border-collapse: collapse;
       }
 
-      /* Encabezado */
+      /* Estructuramos el espacio reservado para Header y Footer en cada carilla */
+      .header-spacer {
+        height: 170px;
+      }
+      .footer-spacer {
+        height: 140px;
+      }
+
+      /* 3. Encabezado Fijo Real */
       .header-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 140px;
         background-color: #2b37fb;
-        border-bottom: 4px solid #035e13;
-        padding: 20px;
+        border-bottom: 8px solid #2495e6;
+        padding: 0 60px;
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        position: relative;
+        z-index: 1000;
       }
+
       .logo {
         width: 100px;
         height: 100px;
         object-fit: contain;
       }
+
       .title {
         color: #ffffff;
-        font-size: 28px;
+        font-size: 30px;
         font-weight: bold;
         margin: 0;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
       }
 
-      /* Contenido */
+      /* 4. Área de contenido dinámico */
       .content {
-        padding: 30px;
-        flex-grow: 1;
+        padding: 30px 60px;
       }
+
       .subtitle {
         color: #333333;
+        text-align: right;
         font-size: 18px;
-        margin-bottom: 25px;
+        margin-top: 0;
+        margin-bottom: 20px;
         font-weight: 600;
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 10px;
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        border-bottom: 4px solid #e0e0e0;
+        padding-bottom: 4px;
       }
 
-      /* Tabla de Datos de la DB */
+      /* 5. Tabla de Datos de la DB */
       .data-table {
+        border: 2px solid #aaa;
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
       }
+
+      /* Fuerza a repetir los nombres de las columnas en cada salto */
+      .data-table thead {
+        display: table-header-group;
+      }
+
       .data-table th {
-        background-color: #f4f4f4;
+        background-color: #eee;
         color: #333333;
         text-transform: uppercase;
         font-size: 14px;
         letter-spacing: 0.5px;
         padding: 12px;
-        border-bottom: 2px solid #ddd;
+        border-bottom: 2px solid #aaa;
+      }
+
+      .data-table tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .col-1 {
+        width: 60px;
         text-align: left;
       }
+      .col-2 {
+        width: auto;
+      }
+      .col-3 {
+        width: 120px;
+        text-align: right;
+      }
+
       .data-table td {
         padding: 12px;
-        border-bottom: 1px solid #eee;
+        border: 1px solid #aaa;
         color: #555555;
         font-size: 14px;
+        vertical-align: middle;
       }
+
       .data-table tbody tr:nth-child(even) {
         background-color: #f9f9f9;
       }
 
-      /* Footer Fijo en la parte inferior */
+      /* 6. Footer Fijo Real */
       .footer {
-        background-color: #3f3f3f;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background-color: #222;
+        border-top: 8px solid #d8ef73;
         color: #d8ef73;
         text-align: center;
         padding: 15px 20px;
-        font-size: 13px;
-        margin-top: auto; /* Empuja el footer al final de la página A4 */
+        font-size: 14px;
+        z-index: 1000;
       }
+
+      .footer h3 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+      }
+
       .footer p {
-        margin: 5px 0;
+        margin: 4px 0;
       }
+
       .footer a {
         color: #d8ef73;
         text-decoration: none;
       }
     </style>
   </head>
+
   <body>
 
-    <div class="wrapper">
-      <header class="header-container">
-        <img class="logo" src="{{logo}}" alt="Logo" />
-        <h1 class="title">Reporte Mensual</h1>
-      </header>
+    <header class="header-container">
+      <img class="logo" src="{{logo}}" alt="Logo" />
+      <h1 class="title">Reporte Mensual</h1>
+    </header>
 
-      <main class="content">
-        {{! Subtítulo dinámico }}
-        {{#if subTitle}}
-          <h2 class="subtitle">{{subTitle}}</h2>
-        {{/if}}
+    <table class="layout-table">
+      <thead>
+        <tr>
+          <td class="header-spacer"></td>
+        </tr>
+      </thead>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Producto</th>
-              <th>Monto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{! Iteración del array de objetos proveniente de la DB }}
-            {{#each items}}
-              <tr>
-                <td>{{this.id}}</td>
-                <td>{{this.producto}}</td>
-                <td>$ {{this.monto}}</td>
-              </tr>
-            {{else}}
-              <tr>
-                <td colspan="3" style="text-align: center; color: #999;">No hay registros disponibles</td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </main>
-    </div>
+      <tbody>
+        <tr>
+          <td>
+            <main class="content">
+              {{! Subtítulo dinámico }}
+              {{#if subTitle}}
+                <h2 class="subtitle">{{subTitle}}</h2>
+              {{/if}}
+
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-1">ID</th>
+                    <th class="col-2">Producto</th>
+                    <th class="col-3">Monto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each items}}
+                    <tr>
+                      <td class="col-1">{{this.id}}</td>
+                      <td class="col-2">{{this.producto}}</td>
+                      <td class="col-3">$ {{this.monto}}</td>
+                    </tr>
+                  {{else}}
+                    <tr>
+                      <td colspan="3" style="text-align: center; color: #999;">No hay registros disponibles</td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </main>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td class="footer-spacer"></td>
+        </tr>
+      </tfoot>
+    </table>
 
     <footer class="footer">
-      <p><strong>Centro Médico de Salud Integrada</strong></p>
-      <p>Teléfonos: +54 (351) 555-0199 / +54 (351) 555-0122</p>
-      <p>Email: <a href="mailto:contacto@instituciondesalud.com">contacto@instituciondesalud.com</a></p>
+      <h3><strong>Administración Cetral - Informes Especiales</strong></h3>
+      <p>Teléfonos: +54 (11) 5555-1234 / +54 (11) 5555-9876</p>
+      <p>Email: <a href="mailto:contacto@correo.com">contacto@correo.com</a></p>
     </footer>
 
   </body>
+
 </html>

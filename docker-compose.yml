@@ -1,0 +1,28 @@
+services:
+  api:
+    build: .
+    container_name: fast-exe0
+
+    # Requerido por Chromium/Puppeteer para correr en modo sandbox
+    # (más seguro que lanzar Chrome con --no-sandbox)
+    init: true
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
+
+    # Chromium usa /dev/shm intensivamente; el default de Docker (64MB)
+    # suele quedarse corto y causa crashes aleatorios del navegador
+    shm_size: "1gb"
+
+    ports:
+      - "3005:3005"
+
+    # Las credenciales de la DB remota y demás secrets viven en un .env
+    # que NO se versiona ni se copia a la imagen (ver .dockerignore)
+    env_file:
+      - .env
+
+    # Sin volúmenes de datos: no hay persistencia local, la DB es remota.
+    # Si más adelante necesitás ver logs/archivos generados en runtime,
+    # se agrega un volumen puntual acá.
