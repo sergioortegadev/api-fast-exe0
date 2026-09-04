@@ -1,0 +1,19 @@
+node_modules
+npm-debug.log*
+
+# Nunca metemos secrets dentro de la imagen: las variables se inyectan
+# en runtime vía docker-compose (env_file) o -e / --env-file
+.env
+.env.*
+
+.git
+.gitignore
+
+# El script "build" copia src -> dist, pero dentro del contenedor
+# corremos directo desde src, así que dist no hace falta
+dist
+
+Dockerfile
+.dockerignore
+docker-compose.yml
+README.md

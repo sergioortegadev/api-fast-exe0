@@ -1,0 +1,21 @@
+info:
+  name: Actualizar venta
+  type: http
+  seq: 5
+
+http:
+  method: PUT
+  url: http://localhost:3010/ventas
+  body:
+    type: json
+    data: |-
+      {
+        "monto": "6000",
+        "id": 6
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

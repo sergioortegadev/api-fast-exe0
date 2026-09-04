@@ -1,0 +1,17 @@
+info:
+  name: Crear venta - error
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: http://localhost:3010/ventas
+  body:
+    type: json
+    data: "{}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
